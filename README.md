@@ -1,3 +1,6 @@
+## Crie um arquivo .env com o mesmo conteúdo de .env.example
+###### Dentro do arquivo altere os valores de banco de dados para suas credenciais e nome de banco existente dentro do seu ambiente
+
 ## Dentro da Pasta do projeto executar os seguintes comandos.
 ###### php artisan migrate
 ###### php artisan migrate:refresh --seed
