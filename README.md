@@ -1,3 +1,14 @@
+## Primeiramente clone o repositório
+###### git clone ...
+
+## Acesse a pasta do projeto clonado e instale as dependencias do composer
+###### composer install
+
+## Agora instale as dependencias do npm
+###### npm install
+
+## Crie um banco de dados vazio para a aplicação
+
 ## Crie um arquivo .env com o mesmo conteúdo de .env.example
 ###### Dentro do arquivo altere os valores de banco de dados para suas credenciais e nome de banco existente dentro do seu ambiente
 
