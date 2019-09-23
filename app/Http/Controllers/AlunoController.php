@@ -55,6 +55,8 @@ class AlunoController extends Controller
         $req = Request::create("/api/v1/cursos/{$id}", 'GET');
         $curso = app()->handle($req)->getData();
 
+        return $curso;
+
         return view('pages.alunos.detail', ['aluno' => $aluno, 'curso' => $curso]);
     }
 
