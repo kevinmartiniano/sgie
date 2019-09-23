@@ -34,6 +34,8 @@ Route::group([
 });
 
 Route::group(['prefix' => 'v1', 'namespace' => 'API'], function () {
+    Route::get("/instituicoes/{id}/cursos/", 'InstituicaoController@getRelCursos');
+    Route::get("/cursos/{id}/alunos/", 'CursoController@getRelAlunos');
     Route::resources([
         'alunos' => 'AlunoController',
         'cursos' => 'CursoController',

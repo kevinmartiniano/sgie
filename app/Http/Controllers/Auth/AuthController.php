@@ -5,9 +5,11 @@ namespace App\Http\Controllers\Auth;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 use App\Http\Controllers\Controller;
+use App\Http\Middleware\RedirectIfAuthenticated;
 use Carbon\Carbon;
 use App\User;
 use App\UserType;
+use GuzzleHttp\Client;
 
 class AuthController extends Controller
 {
@@ -112,6 +114,28 @@ class AuthController extends Controller
         return response()->json([
             'message' => 'Successfully logged out'
         ]);
+    }
+
+    public function getLogin() {
+        return view('pages.users.login');
+    }
+
+    public function getRegister() {
+        return view('pages.users.register');
+    }
+
+    public function postRegister(Request $request) {
+        $resp = $this->signup($request);
+
+        return redirect('auth/login');
+    }
+
+    public function postLogin(Request $request) {
+        $resp = redirect()->action('API\InstituicaoController@index', [
+            $this->login($request)
+        ]);
+
+        return redirect('/instituicoes');
     }
 
     /**

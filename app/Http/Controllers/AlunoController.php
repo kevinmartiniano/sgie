@@ -14,7 +14,10 @@ class AlunoController extends Controller
      */
     public function index()
     {
-        //
+        $req = Request::create('/api/v1/alunos/', 'GET');
+        $alunos = app()->handle($req)->getData();
+
+        return view('pages.alunos.list', ['alunos' => $alunos]);
     }
 
     /**
@@ -44,9 +47,15 @@ class AlunoController extends Controller
      * @param  \App\Aluno  $aluno
      * @return \Illuminate\Http\Response
      */
-    public function show(Aluno $aluno)
+    public function show($id)
     {
-        //
+        $req = Request::create("/api/v1/alunos/{$id}", 'GET');
+        $aluno = app()->handle($req)->getData();
+
+        $req = Request::create("/api/v1/cursos/{$id}", 'GET');
+        $curso = app()->handle($req)->getData();
+
+        return view('pages.alunos.detail', ['aluno' => $aluno, 'curso' => $curso]);
     }
 
     /**
@@ -55,7 +64,7 @@ class AlunoController extends Controller
      * @param  \App\Aluno  $aluno
      * @return \Illuminate\Http\Response
      */
-    public function edit(Aluno $aluno)
+    public function edit($id)
     {
         //
     }

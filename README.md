@@ -5,6 +5,14 @@
 ###### php artisan passport:install
 #### Serão geradas as chaves de cliente.
 
+## Lista de todas as instituições
+#### GET /instituicoes/
+
+## Lista de todos os cursos
+#### GET /cursos/
+
+## Lista de todos os alunos
+#### GET /alunos/
 
 ## Para criar um usuário pela API
 #### Realizar um POST em /api/auth/signup
@@ -42,6 +50,9 @@
 ## Retornar instituição por id
 #### GET /api/v1/instituicoes/{id}
 #### Header Authorization "Bearer {token_retornado}"
+
+## Cursos relacionados com a instituição específica
+#### GET /api/v1/instituicoes/{id}/cursos/
 
 ## Criar uma instituição
 #### POST /api/v1/instituicoes/

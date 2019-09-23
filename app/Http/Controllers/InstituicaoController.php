@@ -4,7 +4,9 @@ namespace App\Http\Controllers;
 
 use App\Instituicao;
 use App\Curso;
-use Illuminate\Http\Request;
+//use Illuminate\Http\Request;
+use phpseclib\Crypt\RC2;
+use Symfony\Component\HttpFoundation\Request;
 
 class InstituicaoController extends Controller
 {
@@ -15,7 +17,12 @@ class InstituicaoController extends Controller
      */
     public function index()
     {
-        return view('pages.instituicoes.list', ['instituicoes' => Instituicao::all()]);
+        $req = Request::create('/api/v1/instituicoes/', 'GET');
+        $resp = app()->handle($req)->getData();
+
+        return view('pages.instituicoes.list', ['instituicoes' => $resp]);
+
+        // return view('pages.instituicoes.list', ['instituicoes' => Instituicao::all()]);
     }
 
     /**
@@ -26,8 +33,16 @@ class InstituicaoController extends Controller
      */
     public function show($id)
     {
-        $instituicao = Instituicao::find($id);
-        $cursos = Curso::where('id_instituicao', $id)->get();
+        $req = Request::create("/api/v1/instituicoes/{$id}", 'GET');
+        $instituicao = app()->handle($req)->getData();
+
+        $req = Request::create("/api/v1/instituicoes/{$id}/cursos/", 'GET');
+        $cursos = app()->handle($req)->getData();
+
         return view('pages.instituicoes.detail', ['instituicao' => $instituicao, 'cursos' => $cursos]);
+
+        // $instituicao = Instituicao::find($id);
+        // $cursos = Curso::where('id_instituicao', $id)->get();
+        // return view('pages.instituicoes.detail', ['instituicao' => $instituicao, 'cursos' => $cursos]);
     }
 }

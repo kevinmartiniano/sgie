@@ -12,7 +12,7 @@ class InstituicaoController extends Controller
 {
     public function __construct()
     {
-        $this->middleware('auth:api')->except(['index', 'show']);
+        $this->middleware('auth:api')->except(['index', 'show', 'getRelCursos']);
     }
     /**
      * Display a listing of the resource.
@@ -24,6 +24,9 @@ class InstituicaoController extends Controller
         return Instituicao::all();
     }
 
+    public function getRelCursos($id) {
+        return Curso::where('id_instituicao', $id)->get();
+    }
     /**
      * Store a newly created resource in storage.
      *

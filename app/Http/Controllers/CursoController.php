@@ -14,7 +14,10 @@ class CursoController extends Controller
      */
     public function index()
     {
-        //
+        $req = Request::create('/api/v1/cursos/', 'GET');
+        $cursos = app()->handle($req)->getData();
+
+        return view('pages.cursos.list', ['cursos' => $cursos]);
     }
 
     /**
@@ -44,9 +47,15 @@ class CursoController extends Controller
      * @param  \App\Curso  $curso
      * @return \Illuminate\Http\Response
      */
-    public function show(Curso $curso)
+    public function show($id)
     {
-        //
+        $req = Request::create("/api/v1/cursos/{$id}", 'GET');
+        $curso = app()->handle($req)->getData();
+
+        $req = Request::create("/api/v1/cursos/{$id}/alunos/", 'GET');
+        $alunos = app()->handle($req)->getData();
+
+        return view('pages.cursos.detail', ['curso' => $curso, 'alunos' => $alunos]);
     }
 
     /**

@@ -11,7 +11,7 @@ class CursoController extends Controller
 {
     public function __construct()
     {
-        $this->middleware('auth:api')->except(['index', 'show']);
+        $this->middleware('auth:api')->except(['index', 'show', 'getRelAlunos']);
     }
     /**
      * Display a listing of the resource.
@@ -50,6 +50,10 @@ class CursoController extends Controller
     public function show(Curso $curso)
     {
         return $curso;
+    }
+
+    public function getRelAlunos($id) {
+        return Aluno::where('id_curso', $id)->get();
     }
 
     /**
