@@ -32,6 +32,9 @@
 ###### php artisan passport:install
 #### Serão geradas as chaves de cliente.
 
+## Gere uma chave para o sistema com o comando...
+###### php artisan key:generate
+
 ## Lista de todas as instituições
 #### GET /instituicoes/
 
