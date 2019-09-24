@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers;
 
+use App\Instituicao;
 use Illuminate\Http\Request;
 
 class HomeController extends Controller
@@ -23,6 +24,7 @@ class HomeController extends Controller
      */
     public function index()
     {
-        return view('home');
+        $instituicoes = Instituicao::all();
+        return view('pages.instituicoes.list', ['instituicoes' => $instituicoes]);
     }
 }
