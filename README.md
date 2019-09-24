@@ -1,3 +1,16 @@
+## Credenciais
+#### Usuário do tipo administrador
+###### email: carla.freitas@example.com
+###### senha: 12345678
+#### Usuário do tipo administrador
+###### email: pedro.silva@example.com
+###### senha: 12345678
+#### Usuário do tipo administrador
+###### email: fulano.silva@example.com
+###### senha: 12345678
+
+## Somente os usuários administradores podem editar os registros
+
 ## Primeiramente clone o repositório
 ###### git clone ...
 
