@@ -24,7 +24,8 @@ class InstituicaoController extends Controller
         return Instituicao::all();
     }
 
-    public function getRelCursos($id) {
+    public function getRelCursos($id)
+    {
         return Curso::where('id_instituicao', $id)->get();
     }
     /**

@@ -2478,6 +2478,41 @@ __webpack_require__.r(__webpack_exports__);
 //
 //
 //
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
 /* harmony default export */ __webpack_exports__["default"] = ({
   data: function data() {
     return {//
@@ -2488,7 +2523,169 @@ __webpack_require__.r(__webpack_exports__);
   },
   mounted: function mounted() {//
   },
-  methods: {//
+  methods: {
+    editInstituicao: function editInstituicao(id) {
+      var instituicao = {
+        nome: this.getNome(id),
+        cnpj: this.getCnpj(id),
+        status: this.getStatus(id)
+      };
+      this.requestApi('put', '/api/v1/instituicoes/' + id, instituicao, 'refreshPage', {});
+    },
+    getId: function getId(id) {
+      return $('input[id="id-' + id + '"]').val();
+    },
+    getNome: function getNome(id) {
+      return $('input[id="nome-' + id + '"]').val();
+    },
+    getCnpj: function getCnpj(id) {
+      return $('input[id="cnpj-' + id + '"]').val();
+    },
+    getStatus: function getStatus(id) {
+      return $('input[id="status-' + id + '"]').val();
+    },
+    callFunction: function callFunction(exec, resp, args) {
+      if (exec = 'refreshPage') {
+        location.reload();
+      }
+    },
+    requestApi: function requestApi(method, uri, form, exec, args) {
+      this.getClients(method, uri, form, exec, args);
+    },
+    getClients: function getClients(method, uri, form, exec, args) {
+      var _this = this;
+
+      axios.get('/oauth/clients').then(function (response) {
+        if (response.data.length == 0) {
+          _this.createClient(method, uri, form, exec, args);
+        } else {
+          _this.clientId = response.data[0].id;
+          _this.clientName = response.data[0].name;
+
+          _this.setNewToken(method, uri, form, exec, args);
+        }
+      })["catch"](function (err) {
+        if (err.response.status == 401) {
+          window.location.href = window.location.origin;
+        } else {
+          console.error(e);
+        }
+      });
+    },
+    createClient: function createClient(method, uri, form, exec, args) {
+      var _this2 = this;
+
+      axios.post('/oauth/clients', {
+        name: 'user ' + this.user_id,
+        redirect: window.location.origin
+      }).then(function (response) {
+        _this2.getClients(method, uri, form, exec, args);
+      })["catch"](function (error) {
+        console.error(error);
+      });
+    },
+
+    /*
+     * Creating new personal access token for the user.
+     */
+    setNewToken: function setNewToken(method, uri, form, exec, args) {
+      var _this3 = this;
+
+      axios.post('/oauth/personal-access-tokens', {
+        name: this.clientName,
+        scopes: []
+      }).then(function (response) {
+        _this3.accessToken = response.data.accessToken;
+        _this3.accessTokenId = response.data.token.id;
+
+        _this3.sendRequest(method, uri, form, exec, args);
+      })["catch"](function (error) {
+        console.error(error);
+      });
+    },
+    sendRequest: function sendRequest(method, uri, form, exec, args) {
+      var _this4 = this;
+
+      if (method == 'get' || method == 'delete') {
+        if (method == 'get') {
+          axios.get(uri, {
+            headers: {
+              'Authorization': "Bearer " + this.accessToken,
+              'Content-Type': "application/json",
+              'Accept': "application/json"
+            }
+          }).then(function (resp) {
+            _this4.revoke();
+
+            _this4.callFunction(exec, resp, args);
+          })["catch"](function (e) {
+            console.error(e);
+          });
+        } else {
+          axios["delete"](uri, {
+            headers: {
+              'Authorization': "Bearer " + this.accessToken,
+              'Content-Type': "application/json",
+              'Accept': "application/json"
+            }
+          }).then(function (resp) {
+            _this4.revoke();
+
+            _this4.callFunction(exec, resp, args);
+          })["catch"](function (e) {
+            console.error(e);
+          });
+        }
+      } else {
+        if (method == 'post') {
+          axios.post(uri, form, {
+            headers: {
+              'Authorization': "Bearer " + this.accessToken,
+              'Content-Type': "application/json",
+              'Accept': "application/json"
+            }
+          }).then(function (resp) {
+            _this4.revoke();
+
+            _this4.callFunction(exec, resp, args);
+          })["catch"](function (e) {
+            console.error(e);
+          });
+        } else if (method == 'put') {
+          axios.put(uri, form, {
+            headers: {
+              'Authorization': "Bearer " + this.accessToken,
+              'Content-Type': "application/json",
+              'Accept': "application/json"
+            }
+          }).then(function (resp) {
+            _this4.revoke();
+
+            _this4.callFunction(exec, resp, args);
+          })["catch"](function (e) {
+            console.log('error');
+            console.log(_this4.accessToken);
+            console.error(e);
+          });
+        } else {
+          console.log('Method not supported');
+        }
+      }
+    },
+
+    /*
+     * Deleting last created token.
+     */
+    revoke: function revoke() {
+      var _this5 = this;
+
+      axios["delete"]('/oauth/personal-access-tokens/' + this.accessTokenId).then(function (resp) {
+        _this5.accessTokenId = '';
+        _this5.accessToken = '';
+        _this5.clientId = '';
+        _this5.clientname = '';
+      });
+    }
   }
 });
 
@@ -2503,6 +2700,40 @@ __webpack_require__.r(__webpack_exports__);
 
 "use strict";
 __webpack_require__.r(__webpack_exports__);
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
 //
 //
 //
@@ -2551,6 +2782,19 @@ __webpack_require__.r(__webpack_exports__);
   mounted: function mounted() {//
   },
   methods: {
+    editCurso: function editCurso(id) {
+      var curso = {
+        nome: this.getNome(id),
+        duracao: this.getDuracao(id)
+      };
+      this.requestApi('put', '/api/v1/cursos/' + id, curso, 'refreshPage', {});
+    },
+    getNome: function getNome(id) {
+      return $('input[id="nome-' + id + '"]').val();
+    },
+    getDuracao: function getDuracao(id) {
+      return $('input[id="duracao-' + id + '"]').val();
+    },
     callFunction: function callFunction(exec, resp, args) {
       if (exec = 'refreshPage') {
         location.reload();
@@ -38562,7 +38806,152 @@ var render = function() {
                   _vm._s(instituicao.cnpj) +
                   "\n                "
               )
-            ])
+            ]),
+            _vm._v(" "),
+            _c("td", [
+              _c(
+                "button",
+                {
+                  staticClass: "btn btn-primary",
+                  attrs: {
+                    type: "button",
+                    "data-toggle": "modal",
+                    "data-target": "#editModal-" + instituicao.id
+                  }
+                },
+                [_vm._v("Editar")]
+              )
+            ]),
+            _vm._v(" "),
+            _c(
+              "div",
+              {
+                staticClass: "modal fade",
+                attrs: {
+                  id: "editModal-" + instituicao.id,
+                  tabindex: "-1",
+                  role: "dialog",
+                  "aria-labelledby": "editModalLabel",
+                  "aria-hidden": "true"
+                }
+              },
+              [
+                _c(
+                  "div",
+                  {
+                    staticClass: "modal-dialog modal-lg",
+                    attrs: { role: "document" }
+                  },
+                  [
+                    _c("div", { staticClass: "modal-content" }, [
+                      _c("div", { staticClass: "modal-header" }, [
+                        _c(
+                          "h5",
+                          {
+                            staticClass: "modal-title",
+                            attrs: { id: "editModalLabel-" + instituicao.id }
+                          },
+                          [_vm._v("Editar")]
+                        ),
+                        _vm._v(" "),
+                        _vm._m(1, true)
+                      ]),
+                      _vm._v(" "),
+                      _c("div", { staticClass: "modal-body" }, [
+                        _c("form", [
+                          _c("input", {
+                            attrs: {
+                              id: "id-" + instituicao.id,
+                              type: "hidden"
+                            },
+                            domProps: { value: instituicao.id }
+                          }),
+                          _vm._v(" "),
+                          _c("input", {
+                            attrs: {
+                              id: "status-" + instituicao.id,
+                              type: "hidden"
+                            },
+                            domProps: { value: instituicao.id }
+                          }),
+                          _vm._v(" "),
+                          _c("div", { staticClass: "form-group" }, [
+                            _c(
+                              "label",
+                              {
+                                staticClass: "col-form-label",
+                                attrs: { for: "nome-" + instituicao.id }
+                              },
+                              [_vm._v("Nome:")]
+                            ),
+                            _vm._v(" "),
+                            _c("input", {
+                              staticClass: "form-control",
+                              attrs: {
+                                type: "text",
+                                id: "nome-" + instituicao.id
+                              },
+                              domProps: { value: instituicao.nome }
+                            })
+                          ]),
+                          _vm._v(" "),
+                          _c("div", { staticClass: "form-group" }, [
+                            _c(
+                              "label",
+                              {
+                                staticClass: "col-form-label",
+                                attrs: { for: "estado-" + instituicao.id }
+                              },
+                              [_vm._v("CNPJ:")]
+                            ),
+                            _vm._v(" "),
+                            _c("input", {
+                              staticClass: "form-control",
+                              attrs: { id: "cnpj-" + instituicao.id },
+                              domProps: { value: instituicao.cnpj }
+                            })
+                          ])
+                        ])
+                      ]),
+                      _vm._v(" "),
+                      _c("div", { staticClass: "modal-footer" }, [
+                        _c(
+                          "button",
+                          {
+                            staticClass: "btn btn-secondary",
+                            attrs: {
+                              type: "button",
+                              "data-dismiss": "modal",
+                              id: "cancel",
+                              name: "cancel"
+                            }
+                          },
+                          [_vm._v("Cancelar")]
+                        ),
+                        _vm._v(" "),
+                        _c(
+                          "button",
+                          {
+                            staticClass: "btn btn-primary",
+                            attrs: {
+                              type: "button",
+                              id: "submit",
+                              name: "submit"
+                            },
+                            on: {
+                              click: function($event) {
+                                return _vm.editInstituicao(instituicao.id)
+                              }
+                            }
+                          },
+                          [_vm._v("Salvar")]
+                        )
+                      ])
+                    ])
+                  ]
+                )
+              ]
+            )
           ])
         }),
         0
@@ -38581,9 +38970,28 @@ var staticRenderFns = [
         _vm._v(" "),
         _c("th", { attrs: { scope: "col" } }, [_vm._v("Nome")]),
         _vm._v(" "),
-        _c("th", { attrs: { scope: "col" } }, [_vm._v("CNPJ")])
+        _c("th", { attrs: { scope: "col" } }, [_vm._v("CNPJ")]),
+        _vm._v(" "),
+        _c("th", { attrs: { scope: "col" } }, [_vm._v("Ações")])
       ])
     ])
+  },
+  function() {
+    var _vm = this
+    var _h = _vm.$createElement
+    var _c = _vm._self._c || _h
+    return _c(
+      "button",
+      {
+        staticClass: "close",
+        attrs: {
+          type: "button",
+          "data-dismiss": "modal",
+          "aria-label": "Close"
+        }
+      },
+      [_c("span", { attrs: { "aria-hidden": "true" } }, [_vm._v("×")])]
+    )
   }
 ]
 render._withStripped = true
@@ -38639,7 +39047,138 @@ var render = function() {
                 ])
               : _c("td", [
                   _vm._v("\n                    Inativo\n                ")
-                ])
+                ]),
+            _vm._v(" "),
+            _c("td", [
+              _c(
+                "button",
+                {
+                  staticClass: "btn btn-primary",
+                  attrs: {
+                    type: "button",
+                    "data-toggle": "modal",
+                    "data-target": "#editModal-" + curso.id
+                  }
+                },
+                [_vm._v("Editar")]
+              )
+            ]),
+            _vm._v(" "),
+            _c(
+              "div",
+              {
+                staticClass: "modal fade",
+                attrs: {
+                  id: "editModal-" + curso.id,
+                  tabindex: "-1",
+                  role: "dialog",
+                  "aria-labelledby": "editModalLabel",
+                  "aria-hidden": "true"
+                }
+              },
+              [
+                _c(
+                  "div",
+                  {
+                    staticClass: "modal-dialog modal-lg",
+                    attrs: { role: "document" }
+                  },
+                  [
+                    _c("div", { staticClass: "modal-content" }, [
+                      _c("div", { staticClass: "modal-header" }, [
+                        _c(
+                          "h5",
+                          {
+                            staticClass: "modal-title",
+                            attrs: { id: "editModalLabel-" + curso.id }
+                          },
+                          [_vm._v("Editar")]
+                        ),
+                        _vm._v(" "),
+                        _vm._m(1, true)
+                      ]),
+                      _vm._v(" "),
+                      _c("div", { staticClass: "modal-body" }, [
+                        _c("form", [
+                          _c("input", {
+                            attrs: { id: "id-" + curso.id, type: "hidden" },
+                            domProps: { value: curso.id }
+                          }),
+                          _vm._v(" "),
+                          _c("div", { staticClass: "form-group" }, [
+                            _c(
+                              "label",
+                              {
+                                staticClass: "col-form-label",
+                                attrs: { for: "nome-" + curso.id }
+                              },
+                              [_vm._v("Nome:")]
+                            ),
+                            _vm._v(" "),
+                            _c("input", {
+                              staticClass: "form-control",
+                              attrs: { type: "text", id: "nome-" + curso.id },
+                              domProps: { value: curso.nome }
+                            })
+                          ]),
+                          _vm._v(" "),
+                          _c("div", { staticClass: "form-group" }, [
+                            _c(
+                              "label",
+                              {
+                                staticClass: "col-form-label",
+                                attrs: { for: "duracao-" + curso.id }
+                              },
+                              [_vm._v("Duração (Horas):")]
+                            ),
+                            _vm._v(" "),
+                            _c("input", {
+                              staticClass: "form-control",
+                              attrs: { id: "duracao-" + curso.id },
+                              domProps: { value: curso.duracao }
+                            })
+                          ])
+                        ])
+                      ]),
+                      _vm._v(" "),
+                      _c("div", { staticClass: "modal-footer" }, [
+                        _c(
+                          "button",
+                          {
+                            staticClass: "btn btn-secondary",
+                            attrs: {
+                              type: "button",
+                              "data-dismiss": "modal",
+                              id: "cancel",
+                              name: "cancel"
+                            }
+                          },
+                          [_vm._v("Cancelar")]
+                        ),
+                        _vm._v(" "),
+                        _c(
+                          "button",
+                          {
+                            staticClass: "btn btn-primary",
+                            attrs: {
+                              type: "button",
+                              id: "submit",
+                              name: "submit"
+                            },
+                            on: {
+                              click: function($event) {
+                                return _vm.editCurso(curso.id)
+                              }
+                            }
+                          },
+                          [_vm._v("Salvar")]
+                        )
+                      ])
+                    ])
+                  ]
+                )
+              ]
+            )
           ])
         }),
         0
@@ -38658,9 +39197,28 @@ var staticRenderFns = [
         _vm._v(" "),
         _c("th", { attrs: { scope: "col" } }, [_vm._v("Duração (Horas)")]),
         _vm._v(" "),
-        _c("th", { attrs: { scope: "col" } }, [_vm._v("Status")])
+        _c("th", { attrs: { scope: "col" } }, [_vm._v("Status")]),
+        _vm._v(" "),
+        _c("th", { attrs: { scope: "col" } }, [_vm._v("Ações")])
       ])
     ])
+  },
+  function() {
+    var _vm = this
+    var _h = _vm.$createElement
+    var _c = _vm._self._c || _h
+    return _c(
+      "button",
+      {
+        staticClass: "close",
+        attrs: {
+          type: "button",
+          "data-dismiss": "modal",
+          "aria-label": "Close"
+        }
+      },
+      [_c("span", { attrs: { "aria-hidden": "true" } }, [_vm._v("×")])]
+    )
   }
 ]
 render._withStripped = true

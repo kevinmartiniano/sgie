@@ -6,6 +6,7 @@
                     <th scope="col">Nome</th>
                     <th scope="col">Duração (Horas)</th>
                     <th scope="col">Status</th>
+                    <th scope="col">Ações</th>
                 </tr>
             </thead>
             <tbody>
@@ -24,6 +25,39 @@
                     <td v-else>
                         Inativo
                     </td>
+                    <td>
+                        <button type="button" class="btn btn-primary" data-toggle="modal" :data-target="'#editModal-' + curso.id">Editar</button>
+                    </td>
+
+                    <div class="modal fade" :id="'editModal-' + curso.id" tabindex="-1" role="dialog" aria-labelledby="editModalLabel" aria-hidden="true">
+                        <div class="modal-dialog modal-lg" role="document">
+                            <div class="modal-content">
+                                <div class="modal-header">
+                                    <h5 class="modal-title" :id="'editModalLabel-' + curso.id">Editar</h5>
+                                    <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                                    <span aria-hidden="true">&times;</span>
+                                    </button>
+                                </div>
+                                <div class="modal-body">
+                                    <form>
+                                        <input :id="'id-' + curso.id" type="hidden" :value="curso.id" />
+                                        <div class="form-group">
+                                            <label :for="'nome-' + curso.id" class="col-form-label">Nome:</label>
+                                            <input type="text" class="form-control" :id="'nome-' + curso.id" :value="curso.nome">
+                                        </div>
+                                        <div class="form-group">
+                                            <label :for="'duracao-' + curso.id" class="col-form-label">Duração (Horas):</label>
+                                            <input class="form-control" :id="'duracao-' + curso.id" :value="curso.duracao"></input>
+                                        </div>
+                                    </form>
+                                </div>
+                                <div class="modal-footer">
+                                    <button type="button" class="btn btn-secondary" data-dismiss="modal" id="cancel" name="cancel">Cancelar</button>
+                                    <button type="button" class="btn btn-primary" v-on:click="editCurso(curso.id)" id="submit" name="submit">Salvar</button>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
                 </tr>
             </tbody>
         </table>
@@ -55,6 +89,23 @@ export default {
 	},
 
     methods: {
+        editCurso(id) {
+            var curso = {
+                nome: this.getNome(id),
+                duracao: this.getDuracao(id),
+            };
+
+            this.requestApi('put', '/api/v1/cursos/' + id, curso, 'refreshPage', {});
+        },
+
+        getNome(id) {
+            return $('input[id="nome-' + id + '"]').val();
+        },
+
+        getDuracao(id) {
+            return $('input[id="duracao-' + id + '"]').val();
+        },
+
         callFunction(exec, resp, args) {
             if(exec = 'refreshPage') {
                 location.reload();
