@@ -8,7 +8,7 @@ use Faker\Generator as Faker;
 $factory->define(Instituicao::class, function (Faker $faker) {
     $count = 10000000000000;
     return [
-        'nome' => 'University of ' . $faker->state,
+        'nome' => 'Universidade de ' . $faker->state,
         'cnpj' => $faker->randomNumber(),
         'status' => 1,
     ];
