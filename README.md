@@ -5,7 +5,7 @@
 #### Usuário do tipo administrador
 ###### email: pedro.silva@example.com
 ###### senha: 12345678
-#### Usuário do tipo administrador
+#### Usuário do tipo comum
 ###### email: fulano.silva@example.com
 ###### senha: 12345678
 
