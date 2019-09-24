@@ -21,6 +21,18 @@ window.Vue = require('vue');
 
 Vue.component('example-component', require('./components/ExampleComponent.vue').default);
 
+Vue.component(
+    'edit-aluno', require(
+        './components/alunos/EditAluno.vue'
+    ).default
+);
+
+Vue.component(
+    'list-instituicao', require(
+        './components/instituicoes/ListInstituicao.vue'
+    ).default
+);
+
 /**
  * Next, we will create a fresh Vue application instance and attach it to
  * the page. Then, you may begin adding components to this application

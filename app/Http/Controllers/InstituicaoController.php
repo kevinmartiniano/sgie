@@ -17,12 +17,7 @@ class InstituicaoController extends Controller
      */
     public function index()
     {
-        $req = Request::create('/api/v1/instituicoes/', 'GET');
-        $resp = app()->handle($req)->getData();
-
-        return view('pages.instituicoes.list', ['instituicoes' => $resp]);
-
-        // return view('pages.instituicoes.list', ['instituicoes' => Instituicao::all()]);
+        return view('pages.instituicoes.list', ['instituicoes' => Instituicao::all()]);
     }
 
     /**

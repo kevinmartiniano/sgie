@@ -25,7 +25,7 @@ Route::resources([
     'alunos' => 'AlunoController',
 ], [
     'only' => [
-        'index', 'show'
+        'index', 'show', 'edit'
     ],
 ]);
 

@@ -3,6 +3,7 @@
 namespace App\Http\Controllers;
 
 use App\Aluno;
+use App\Curso;
 use Illuminate\Http\Request;
 
 class AlunoController extends Controller
@@ -55,8 +56,6 @@ class AlunoController extends Controller
         $req = Request::create("/api/v1/cursos/{$id}", 'GET');
         $curso = app()->handle($req)->getData();
 
-        return $curso;
-
         return view('pages.alunos.detail', ['aluno' => $aluno, 'curso' => $curso]);
     }
 
@@ -66,9 +65,10 @@ class AlunoController extends Controller
      * @param  \App\Aluno  $aluno
      * @return \Illuminate\Http\Response
      */
-    public function edit($id)
+    public function edit(Aluno $aluno)
     {
-        //
+        $curso = Curso::find($aluno->id_curso);
+        return view('pages.alunos.edit', ['aluno' => $aluno, 'curso' => $curso]);
     }
 
     /**
