@@ -28,16 +28,9 @@ class InstituicaoController extends Controller
      */
     public function show($id)
     {
-        $req = Request::create("/api/v1/instituicoes/{$id}", 'GET');
-        $instituicao = app()->handle($req)->getData();
-
-        $req = Request::create("/api/v1/instituicoes/{$id}/cursos/", 'GET');
-        $cursos = app()->handle($req)->getData();
+        $instituicao = Instituicao::find($id);
+        $cursos = Curso::where('id_instituicao', $id)->get();
 
         return view('pages.instituicoes.detail', ['instituicao' => $instituicao, 'cursos' => $cursos]);
-
-        // $instituicao = Instituicao::find($id);
-        // $cursos = Curso::where('id_instituicao', $id)->get();
-        // return view('pages.instituicoes.detail', ['instituicao' => $instituicao, 'cursos' => $cursos]);
     }
 }

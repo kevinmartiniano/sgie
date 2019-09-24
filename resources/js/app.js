@@ -33,6 +33,18 @@ Vue.component(
     ).default
 );
 
+Vue.component(
+    'related-cursos', require(
+        './components/instituicoes/RelCursos.vue'
+    ).default
+);
+
+Vue.component(
+    'related-alunos', require(
+        './components/cursos/RelAlunos.vue'
+    ).default
+);
+
 /**
  * Next, we will create a fresh Vue application instance and attach it to
  * the page. Then, you may begin adding components to this application

@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers;
 
+use App\Aluno;
 use App\Curso;
 use Illuminate\Http\Request;
 
@@ -47,13 +48,9 @@ class CursoController extends Controller
      * @param  \App\Curso  $curso
      * @return \Illuminate\Http\Response
      */
-    public function show($id)
+    public function show(Curso $curso)
     {
-        $req = Request::create("/api/v1/cursos/{$id}", 'GET');
-        $curso = app()->handle($req)->getData();
-
-        $req = Request::create("/api/v1/cursos/{$id}/alunos/", 'GET');
-        $alunos = app()->handle($req)->getData();
+        $alunos = Aluno::where('id_curso', $curso->id)->get();
 
         return view('pages.cursos.detail', ['curso' => $curso, 'alunos' => $alunos]);
     }

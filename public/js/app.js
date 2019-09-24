@@ -2225,6 +2225,222 @@ __webpack_require__.r(__webpack_exports__);
 
 /***/ }),
 
+/***/ "./node_modules/babel-loader/lib/index.js?!./node_modules/vue-loader/lib/index.js?!./resources/js/components/cursos/RelAlunos.vue?vue&type=script&lang=js&":
+/*!***************************************************************************************************************************************************************************!*\
+  !*** ./node_modules/babel-loader/lib??ref--4-0!./node_modules/vue-loader/lib??vue-loader-options!./resources/js/components/cursos/RelAlunos.vue?vue&type=script&lang=js& ***!
+  \***************************************************************************************************************************************************************************/
+/*! exports provided: default */
+/***/ (function(module, __webpack_exports__, __webpack_require__) {
+
+"use strict";
+__webpack_require__.r(__webpack_exports__);
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+/* harmony default export */ __webpack_exports__["default"] = ({
+  data: function data() {
+    return {
+      accessToken: '',
+      accessTokenId: '',
+      clientId: '',
+      clientName: '',
+      tokens: [],
+      create: {}
+    };
+  },
+  props: ['alunos'],
+  ready: function ready() {//
+  },
+  mounted: function mounted() {//
+  },
+  methods: {
+    callFunction: function callFunction(exec, resp, args) {
+      if (exec = 'refreshPage') {
+        location.reload();
+      }
+    },
+    requestApi: function requestApi(method, uri, form, exec, args) {
+      this.getClients(method, uri, form, exec, args);
+    },
+    getClients: function getClients(method, uri, form, exec, args) {
+      var _this = this;
+
+      axios.get('/oauth/clients').then(function (response) {
+        if (response.data.length == 0) {
+          _this.createClient(method, uri, form, exec, args);
+        } else {
+          _this.clientId = response.data[0].id;
+          _this.clientName = response.data[0].name;
+
+          _this.setNewToken(method, uri, form, exec, args);
+        }
+      })["catch"](function (err) {
+        if (err.response.status == 401) {
+          window.location.href = window.location.origin;
+        } else {
+          console.error(e);
+        }
+      });
+    },
+    createClient: function createClient(method, uri, form, exec, args) {
+      var _this2 = this;
+
+      axios.post('/oauth/clients', {
+        name: 'user ' + this.user_id,
+        redirect: window.location.origin
+      }).then(function (response) {
+        _this2.getClients(method, uri, form, exec, args);
+      })["catch"](function (error) {
+        console.error(error);
+      });
+    },
+
+    /*
+     * Creating new personal access token for the user.
+     */
+    setNewToken: function setNewToken(method, uri, form, exec, args) {
+      var _this3 = this;
+
+      axios.post('/oauth/personal-access-tokens', {
+        name: this.clientName,
+        scopes: []
+      }).then(function (response) {
+        _this3.accessToken = response.data.accessToken;
+        _this3.accessTokenId = response.data.token.id;
+
+        _this3.sendRequest(method, uri, form, exec, args);
+      })["catch"](function (error) {
+        console.error(error);
+      });
+    },
+    sendRequest: function sendRequest(method, uri, form, exec, args) {
+      var _this4 = this;
+
+      if (method == 'get' || method == 'delete') {
+        if (method == 'get') {
+          axios.get(uri, {
+            headers: {
+              'Authorization': "Bearer " + this.accessToken,
+              'Content-Type': "application/json",
+              'Accept': "application/json"
+            }
+          }).then(function (resp) {
+            _this4.revoke();
+
+            _this4.callFunction(exec, resp, args);
+          })["catch"](function (e) {
+            console.error(e);
+          });
+        } else {
+          axios["delete"](uri, {
+            headers: {
+              'Authorization': "Bearer " + this.accessToken,
+              'Content-Type': "application/json",
+              'Accept': "application/json"
+            }
+          }).then(function (resp) {
+            _this4.revoke();
+
+            _this4.callFunction(exec, resp, args);
+          })["catch"](function (e) {
+            console.error(e);
+          });
+        }
+      } else {
+        if (method == 'post') {
+          axios.post(uri, form, {
+            headers: {
+              'Authorization': "Bearer " + this.accessToken,
+              'Content-Type': "application/json",
+              'Accept': "application/json"
+            }
+          }).then(function (resp) {
+            _this4.revoke();
+
+            _this4.callFunction(exec, resp, args);
+          })["catch"](function (e) {
+            console.error(e);
+          });
+        } else if (method == 'put') {
+          axios.put(uri, form, {
+            headers: {
+              'Authorization': "Bearer " + this.accessToken,
+              'Content-Type': "application/json",
+              'Accept': "application/json"
+            }
+          }).then(function (resp) {
+            _this4.revoke();
+
+            _this4.callFunction(exec, resp, args);
+          })["catch"](function (e) {
+            console.log('error');
+            console.log(_this4.accessToken);
+            console.error(e);
+          });
+        } else {
+          console.log('Method not supported');
+        }
+      }
+    },
+
+    /*
+     * Deleting last created token.
+     */
+    revoke: function revoke() {
+      var _this5 = this;
+
+      axios["delete"]('/oauth/personal-access-tokens/' + this.accessTokenId).then(function (resp) {
+        _this5.accessTokenId = '';
+        _this5.accessToken = '';
+        _this5.clientId = '';
+        _this5.clientname = '';
+      });
+    }
+  }
+});
+
+/***/ }),
+
 /***/ "./node_modules/babel-loader/lib/index.js?!./node_modules/vue-loader/lib/index.js?!./resources/js/components/instituicoes/ListInstituicao.vue?vue&type=script&lang=js&":
 /*!***************************************************************************************************************************************************************************************!*\
   !*** ./node_modules/babel-loader/lib??ref--4-0!./node_modules/vue-loader/lib??vue-loader-options!./resources/js/components/instituicoes/ListInstituicao.vue?vue&type=script&lang=js& ***!
@@ -2273,6 +2489,210 @@ __webpack_require__.r(__webpack_exports__);
   mounted: function mounted() {//
   },
   methods: {//
+  }
+});
+
+/***/ }),
+
+/***/ "./node_modules/babel-loader/lib/index.js?!./node_modules/vue-loader/lib/index.js?!./resources/js/components/instituicoes/RelCursos.vue?vue&type=script&lang=js&":
+/*!*********************************************************************************************************************************************************************************!*\
+  !*** ./node_modules/babel-loader/lib??ref--4-0!./node_modules/vue-loader/lib??vue-loader-options!./resources/js/components/instituicoes/RelCursos.vue?vue&type=script&lang=js& ***!
+  \*********************************************************************************************************************************************************************************/
+/*! exports provided: default */
+/***/ (function(module, __webpack_exports__, __webpack_require__) {
+
+"use strict";
+__webpack_require__.r(__webpack_exports__);
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+/* harmony default export */ __webpack_exports__["default"] = ({
+  data: function data() {
+    return {
+      accessToken: '',
+      accessTokenId: '',
+      clientId: '',
+      clientName: '',
+      tokens: [],
+      create: {}
+    };
+  },
+  props: ['cursos'],
+  ready: function ready() {//
+  },
+  mounted: function mounted() {//
+  },
+  methods: {
+    callFunction: function callFunction(exec, resp, args) {
+      if (exec = 'refreshPage') {
+        location.reload();
+      }
+    },
+    requestApi: function requestApi(method, uri, form, exec, args) {
+      this.getClients(method, uri, form, exec, args);
+    },
+    getClients: function getClients(method, uri, form, exec, args) {
+      var _this = this;
+
+      axios.get('/oauth/clients').then(function (response) {
+        if (response.data.length == 0) {
+          _this.createClient(method, uri, form, exec, args);
+        } else {
+          _this.clientId = response.data[0].id;
+          _this.clientName = response.data[0].name;
+
+          _this.setNewToken(method, uri, form, exec, args);
+        }
+      })["catch"](function (err) {
+        if (err.response.status == 401) {
+          window.location.href = window.location.origin;
+        } else {
+          console.error(e);
+        }
+      });
+    },
+    createClient: function createClient(method, uri, form, exec, args) {
+      var _this2 = this;
+
+      axios.post('/oauth/clients', {
+        name: 'user ' + this.user_id,
+        redirect: window.location.origin
+      }).then(function (response) {
+        _this2.getClients(method, uri, form, exec, args);
+      })["catch"](function (error) {
+        console.error(error);
+      });
+    },
+
+    /*
+     * Creating new personal access token for the user.
+     */
+    setNewToken: function setNewToken(method, uri, form, exec, args) {
+      var _this3 = this;
+
+      axios.post('/oauth/personal-access-tokens', {
+        name: this.clientName,
+        scopes: []
+      }).then(function (response) {
+        _this3.accessToken = response.data.accessToken;
+        _this3.accessTokenId = response.data.token.id;
+
+        _this3.sendRequest(method, uri, form, exec, args);
+      })["catch"](function (error) {
+        console.error(error);
+      });
+    },
+    sendRequest: function sendRequest(method, uri, form, exec, args) {
+      var _this4 = this;
+
+      if (method == 'get' || method == 'delete') {
+        if (method == 'get') {
+          axios.get(uri, {
+            headers: {
+              'Authorization': "Bearer " + this.accessToken,
+              'Content-Type': "application/json",
+              'Accept': "application/json"
+            }
+          }).then(function (resp) {
+            _this4.revoke();
+
+            _this4.callFunction(exec, resp, args);
+          })["catch"](function (e) {
+            console.error(e);
+          });
+        } else {
+          axios["delete"](uri, {
+            headers: {
+              'Authorization': "Bearer " + this.accessToken,
+              'Content-Type': "application/json",
+              'Accept': "application/json"
+            }
+          }).then(function (resp) {
+            _this4.revoke();
+
+            _this4.callFunction(exec, resp, args);
+          })["catch"](function (e) {
+            console.error(e);
+          });
+        }
+      } else {
+        if (method == 'post') {
+          axios.post(uri, form, {
+            headers: {
+              'Authorization': "Bearer " + this.accessToken,
+              'Content-Type': "application/json",
+              'Accept': "application/json"
+            }
+          }).then(function (resp) {
+            _this4.revoke();
+
+            _this4.callFunction(exec, resp, args);
+          })["catch"](function (e) {
+            console.error(e);
+          });
+        } else if (method == 'put') {
+          axios.put(uri, form, {
+            headers: {
+              'Authorization': "Bearer " + this.accessToken,
+              'Content-Type': "application/json",
+              'Accept': "application/json"
+            }
+          }).then(function (resp) {
+            _this4.revoke();
+
+            _this4.callFunction(exec, resp, args);
+          })["catch"](function (e) {
+            console.log('error');
+            console.log(_this4.accessToken);
+            console.error(e);
+          });
+        } else {
+          console.log('Method not supported');
+        }
+      }
+    },
+
+    /*
+     * Deleting last created token.
+     */
+    revoke: function revoke() {
+      var _this5 = this;
+
+      axios["delete"]('/oauth/personal-access-tokens/' + this.accessTokenId).then(function (resp) {
+        _this5.accessTokenId = '';
+        _this5.accessToken = '';
+        _this5.clientId = '';
+        _this5.clientname = '';
+      });
+    }
   }
 });
 
@@ -37988,6 +38408,113 @@ render._withStripped = true
 
 /***/ }),
 
+/***/ "./node_modules/vue-loader/lib/loaders/templateLoader.js?!./node_modules/vue-loader/lib/index.js?!./resources/js/components/cursos/RelAlunos.vue?vue&type=template&id=0745e058&":
+/*!*******************************************************************************************************************************************************************************************************************!*\
+  !*** ./node_modules/vue-loader/lib/loaders/templateLoader.js??vue-loader-options!./node_modules/vue-loader/lib??vue-loader-options!./resources/js/components/cursos/RelAlunos.vue?vue&type=template&id=0745e058& ***!
+  \*******************************************************************************************************************************************************************************************************************/
+/*! exports provided: render, staticRenderFns */
+/***/ (function(module, __webpack_exports__, __webpack_require__) {
+
+"use strict";
+__webpack_require__.r(__webpack_exports__);
+/* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "render", function() { return render; });
+/* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "staticRenderFns", function() { return staticRenderFns; });
+var render = function() {
+  var _vm = this
+  var _h = _vm.$createElement
+  var _c = _vm._self._c || _h
+  return _c("div", [
+    _c("table", { staticClass: "table table-striped" }, [
+      _vm._m(0),
+      _vm._v(" "),
+      _c(
+        "tbody",
+        _vm._l(_vm.alunos, function(aluno) {
+          return _c("tr", { key: aluno.id }, [
+            _c("td", [
+              _c("a", { attrs: { href: "/alunos/" + aluno.id } }, [
+                _vm._v(
+                  "\n                        " +
+                    _vm._s(aluno.nome) +
+                    "\n                    "
+                )
+              ])
+            ]),
+            _vm._v(" "),
+            _c("td", [
+              _vm._v(
+                "\n                    " +
+                  _vm._s(aluno.cpf) +
+                  "\n                "
+              )
+            ]),
+            _vm._v(" "),
+            _c("td", [
+              _vm._v(
+                "\n                    " +
+                  _vm._s(aluno.email) +
+                  "\n                "
+              )
+            ]),
+            _vm._v(" "),
+            _c("td", [
+              _vm._v(
+                "\n                    " +
+                  _vm._s(aluno.celular) +
+                  "\n                "
+              )
+            ]),
+            _vm._v(" "),
+            _c("td", [
+              _vm._v(
+                "\n                    " +
+                  _vm._s(aluno.uf) +
+                  "\n                "
+              )
+            ]),
+            _vm._v(" "),
+            aluno.status == 1
+              ? _c("td", [
+                  _vm._v("\n                    Ativo\n                ")
+                ])
+              : _c("td", [
+                  _vm._v("\n                    Inativo\n                ")
+                ])
+          ])
+        }),
+        0
+      )
+    ])
+  ])
+}
+var staticRenderFns = [
+  function() {
+    var _vm = this
+    var _h = _vm.$createElement
+    var _c = _vm._self._c || _h
+    return _c("thead", [
+      _c("tr", [
+        _c("th", { attrs: { scope: "col" } }, [_vm._v("Nome")]),
+        _vm._v(" "),
+        _c("th", { attrs: { scope: "col" } }, [_vm._v("CPF")]),
+        _vm._v(" "),
+        _c("th", { attrs: { scope: "col" } }, [_vm._v("Email")]),
+        _vm._v(" "),
+        _c("th", { attrs: { scope: "col" } }, [_vm._v("Celular")]),
+        _vm._v(" "),
+        _c("th", { attrs: { scope: "col" } }, [_vm._v("Estado")]),
+        _vm._v(" "),
+        _c("th", { attrs: { scope: "col" } }, [_vm._v("Status")])
+      ])
+    ])
+  }
+]
+render._withStripped = true
+
+
+
+/***/ }),
+
 /***/ "./node_modules/vue-loader/lib/loaders/templateLoader.js?!./node_modules/vue-loader/lib/index.js?!./resources/js/components/instituicoes/ListInstituicao.vue?vue&type=template&id=9f59ab2e&":
 /*!*******************************************************************************************************************************************************************************************************************************!*\
   !*** ./node_modules/vue-loader/lib/loaders/templateLoader.js??vue-loader-options!./node_modules/vue-loader/lib??vue-loader-options!./resources/js/components/instituicoes/ListInstituicao.vue?vue&type=template&id=9f59ab2e& ***!
@@ -38055,6 +38582,83 @@ var staticRenderFns = [
         _c("th", { attrs: { scope: "col" } }, [_vm._v("Nome")]),
         _vm._v(" "),
         _c("th", { attrs: { scope: "col" } }, [_vm._v("CNPJ")])
+      ])
+    ])
+  }
+]
+render._withStripped = true
+
+
+
+/***/ }),
+
+/***/ "./node_modules/vue-loader/lib/loaders/templateLoader.js?!./node_modules/vue-loader/lib/index.js?!./resources/js/components/instituicoes/RelCursos.vue?vue&type=template&id=7d7a5b0b&":
+/*!*************************************************************************************************************************************************************************************************************************!*\
+  !*** ./node_modules/vue-loader/lib/loaders/templateLoader.js??vue-loader-options!./node_modules/vue-loader/lib??vue-loader-options!./resources/js/components/instituicoes/RelCursos.vue?vue&type=template&id=7d7a5b0b& ***!
+  \*************************************************************************************************************************************************************************************************************************/
+/*! exports provided: render, staticRenderFns */
+/***/ (function(module, __webpack_exports__, __webpack_require__) {
+
+"use strict";
+__webpack_require__.r(__webpack_exports__);
+/* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "render", function() { return render; });
+/* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "staticRenderFns", function() { return staticRenderFns; });
+var render = function() {
+  var _vm = this
+  var _h = _vm.$createElement
+  var _c = _vm._self._c || _h
+  return _c("div", [
+    _c("table", { staticClass: "table table-striped" }, [
+      _vm._m(0),
+      _vm._v(" "),
+      _c(
+        "tbody",
+        _vm._l(_vm.cursos, function(curso) {
+          return _c("tr", { key: curso.id }, [
+            _c("td", [
+              _c("a", { attrs: { href: "/cursos/" + curso.id } }, [
+                _vm._v(
+                  "\n                        " +
+                    _vm._s(curso.nome) +
+                    "\n                    "
+                )
+              ])
+            ]),
+            _vm._v(" "),
+            _c("td", [
+              _vm._v(
+                "\n                    " +
+                  _vm._s(curso.duracao) +
+                  "\n                "
+              )
+            ]),
+            _vm._v(" "),
+            curso.status == 1
+              ? _c("td", [
+                  _vm._v("\n                    Ativo\n                ")
+                ])
+              : _c("td", [
+                  _vm._v("\n                    Inativo\n                ")
+                ])
+          ])
+        }),
+        0
+      )
+    ])
+  ])
+}
+var staticRenderFns = [
+  function() {
+    var _vm = this
+    var _h = _vm.$createElement
+    var _c = _vm._self._c || _h
+    return _c("thead", [
+      _c("tr", [
+        _c("th", { attrs: { scope: "col" } }, [_vm._v("Nome")]),
+        _vm._v(" "),
+        _c("th", { attrs: { scope: "col" } }, [_vm._v("Duração (Horas)")]),
+        _vm._v(" "),
+        _c("th", { attrs: { scope: "col" } }, [_vm._v("Status")])
       ])
     ])
   }
@@ -50229,6 +50833,8 @@ window.Vue = __webpack_require__(/*! vue */ "./node_modules/vue/dist/vue.common.
 Vue.component('example-component', __webpack_require__(/*! ./components/ExampleComponent.vue */ "./resources/js/components/ExampleComponent.vue")["default"]);
 Vue.component('edit-aluno', __webpack_require__(/*! ./components/alunos/EditAluno.vue */ "./resources/js/components/alunos/EditAluno.vue")["default"]);
 Vue.component('list-instituicao', __webpack_require__(/*! ./components/instituicoes/ListInstituicao.vue */ "./resources/js/components/instituicoes/ListInstituicao.vue")["default"]);
+Vue.component('related-cursos', __webpack_require__(/*! ./components/instituicoes/RelCursos.vue */ "./resources/js/components/instituicoes/RelCursos.vue")["default"]);
+Vue.component('related-alunos', __webpack_require__(/*! ./components/cursos/RelAlunos.vue */ "./resources/js/components/cursos/RelAlunos.vue")["default"]);
 /**
  * Next, we will create a fresh Vue application instance and attach it to
  * the page. Then, you may begin adding components to this application
@@ -50437,6 +51043,75 @@ __webpack_require__.r(__webpack_exports__);
 
 /***/ }),
 
+/***/ "./resources/js/components/cursos/RelAlunos.vue":
+/*!******************************************************!*\
+  !*** ./resources/js/components/cursos/RelAlunos.vue ***!
+  \******************************************************/
+/*! exports provided: default */
+/***/ (function(module, __webpack_exports__, __webpack_require__) {
+
+"use strict";
+__webpack_require__.r(__webpack_exports__);
+/* harmony import */ var _RelAlunos_vue_vue_type_template_id_0745e058___WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! ./RelAlunos.vue?vue&type=template&id=0745e058& */ "./resources/js/components/cursos/RelAlunos.vue?vue&type=template&id=0745e058&");
+/* harmony import */ var _RelAlunos_vue_vue_type_script_lang_js___WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(/*! ./RelAlunos.vue?vue&type=script&lang=js& */ "./resources/js/components/cursos/RelAlunos.vue?vue&type=script&lang=js&");
+/* empty/unused harmony star reexport *//* harmony import */ var _node_modules_vue_loader_lib_runtime_componentNormalizer_js__WEBPACK_IMPORTED_MODULE_2__ = __webpack_require__(/*! ../../../../node_modules/vue-loader/lib/runtime/componentNormalizer.js */ "./node_modules/vue-loader/lib/runtime/componentNormalizer.js");
+
+
+
+
+
+/* normalize component */
+
+var component = Object(_node_modules_vue_loader_lib_runtime_componentNormalizer_js__WEBPACK_IMPORTED_MODULE_2__["default"])(
+  _RelAlunos_vue_vue_type_script_lang_js___WEBPACK_IMPORTED_MODULE_1__["default"],
+  _RelAlunos_vue_vue_type_template_id_0745e058___WEBPACK_IMPORTED_MODULE_0__["render"],
+  _RelAlunos_vue_vue_type_template_id_0745e058___WEBPACK_IMPORTED_MODULE_0__["staticRenderFns"],
+  false,
+  null,
+  null,
+  null
+  
+)
+
+/* hot reload */
+if (false) { var api; }
+component.options.__file = "resources/js/components/cursos/RelAlunos.vue"
+/* harmony default export */ __webpack_exports__["default"] = (component.exports);
+
+/***/ }),
+
+/***/ "./resources/js/components/cursos/RelAlunos.vue?vue&type=script&lang=js&":
+/*!*******************************************************************************!*\
+  !*** ./resources/js/components/cursos/RelAlunos.vue?vue&type=script&lang=js& ***!
+  \*******************************************************************************/
+/*! exports provided: default */
+/***/ (function(module, __webpack_exports__, __webpack_require__) {
+
+"use strict";
+__webpack_require__.r(__webpack_exports__);
+/* harmony import */ var _node_modules_babel_loader_lib_index_js_ref_4_0_node_modules_vue_loader_lib_index_js_vue_loader_options_RelAlunos_vue_vue_type_script_lang_js___WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! -!../../../../node_modules/babel-loader/lib??ref--4-0!../../../../node_modules/vue-loader/lib??vue-loader-options!./RelAlunos.vue?vue&type=script&lang=js& */ "./node_modules/babel-loader/lib/index.js?!./node_modules/vue-loader/lib/index.js?!./resources/js/components/cursos/RelAlunos.vue?vue&type=script&lang=js&");
+/* empty/unused harmony star reexport */ /* harmony default export */ __webpack_exports__["default"] = (_node_modules_babel_loader_lib_index_js_ref_4_0_node_modules_vue_loader_lib_index_js_vue_loader_options_RelAlunos_vue_vue_type_script_lang_js___WEBPACK_IMPORTED_MODULE_0__["default"]); 
+
+/***/ }),
+
+/***/ "./resources/js/components/cursos/RelAlunos.vue?vue&type=template&id=0745e058&":
+/*!*************************************************************************************!*\
+  !*** ./resources/js/components/cursos/RelAlunos.vue?vue&type=template&id=0745e058& ***!
+  \*************************************************************************************/
+/*! exports provided: render, staticRenderFns */
+/***/ (function(module, __webpack_exports__, __webpack_require__) {
+
+"use strict";
+__webpack_require__.r(__webpack_exports__);
+/* harmony import */ var _node_modules_vue_loader_lib_loaders_templateLoader_js_vue_loader_options_node_modules_vue_loader_lib_index_js_vue_loader_options_RelAlunos_vue_vue_type_template_id_0745e058___WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! -!../../../../node_modules/vue-loader/lib/loaders/templateLoader.js??vue-loader-options!../../../../node_modules/vue-loader/lib??vue-loader-options!./RelAlunos.vue?vue&type=template&id=0745e058& */ "./node_modules/vue-loader/lib/loaders/templateLoader.js?!./node_modules/vue-loader/lib/index.js?!./resources/js/components/cursos/RelAlunos.vue?vue&type=template&id=0745e058&");
+/* harmony reexport (safe) */ __webpack_require__.d(__webpack_exports__, "render", function() { return _node_modules_vue_loader_lib_loaders_templateLoader_js_vue_loader_options_node_modules_vue_loader_lib_index_js_vue_loader_options_RelAlunos_vue_vue_type_template_id_0745e058___WEBPACK_IMPORTED_MODULE_0__["render"]; });
+
+/* harmony reexport (safe) */ __webpack_require__.d(__webpack_exports__, "staticRenderFns", function() { return _node_modules_vue_loader_lib_loaders_templateLoader_js_vue_loader_options_node_modules_vue_loader_lib_index_js_vue_loader_options_RelAlunos_vue_vue_type_template_id_0745e058___WEBPACK_IMPORTED_MODULE_0__["staticRenderFns"]; });
+
+
+
+/***/ }),
+
 /***/ "./resources/js/components/instituicoes/ListInstituicao.vue":
 /*!******************************************************************!*\
   !*** ./resources/js/components/instituicoes/ListInstituicao.vue ***!
@@ -50501,6 +51176,75 @@ __webpack_require__.r(__webpack_exports__);
 /* harmony reexport (safe) */ __webpack_require__.d(__webpack_exports__, "render", function() { return _node_modules_vue_loader_lib_loaders_templateLoader_js_vue_loader_options_node_modules_vue_loader_lib_index_js_vue_loader_options_ListInstituicao_vue_vue_type_template_id_9f59ab2e___WEBPACK_IMPORTED_MODULE_0__["render"]; });
 
 /* harmony reexport (safe) */ __webpack_require__.d(__webpack_exports__, "staticRenderFns", function() { return _node_modules_vue_loader_lib_loaders_templateLoader_js_vue_loader_options_node_modules_vue_loader_lib_index_js_vue_loader_options_ListInstituicao_vue_vue_type_template_id_9f59ab2e___WEBPACK_IMPORTED_MODULE_0__["staticRenderFns"]; });
+
+
+
+/***/ }),
+
+/***/ "./resources/js/components/instituicoes/RelCursos.vue":
+/*!************************************************************!*\
+  !*** ./resources/js/components/instituicoes/RelCursos.vue ***!
+  \************************************************************/
+/*! exports provided: default */
+/***/ (function(module, __webpack_exports__, __webpack_require__) {
+
+"use strict";
+__webpack_require__.r(__webpack_exports__);
+/* harmony import */ var _RelCursos_vue_vue_type_template_id_7d7a5b0b___WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! ./RelCursos.vue?vue&type=template&id=7d7a5b0b& */ "./resources/js/components/instituicoes/RelCursos.vue?vue&type=template&id=7d7a5b0b&");
+/* harmony import */ var _RelCursos_vue_vue_type_script_lang_js___WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(/*! ./RelCursos.vue?vue&type=script&lang=js& */ "./resources/js/components/instituicoes/RelCursos.vue?vue&type=script&lang=js&");
+/* empty/unused harmony star reexport *//* harmony import */ var _node_modules_vue_loader_lib_runtime_componentNormalizer_js__WEBPACK_IMPORTED_MODULE_2__ = __webpack_require__(/*! ../../../../node_modules/vue-loader/lib/runtime/componentNormalizer.js */ "./node_modules/vue-loader/lib/runtime/componentNormalizer.js");
+
+
+
+
+
+/* normalize component */
+
+var component = Object(_node_modules_vue_loader_lib_runtime_componentNormalizer_js__WEBPACK_IMPORTED_MODULE_2__["default"])(
+  _RelCursos_vue_vue_type_script_lang_js___WEBPACK_IMPORTED_MODULE_1__["default"],
+  _RelCursos_vue_vue_type_template_id_7d7a5b0b___WEBPACK_IMPORTED_MODULE_0__["render"],
+  _RelCursos_vue_vue_type_template_id_7d7a5b0b___WEBPACK_IMPORTED_MODULE_0__["staticRenderFns"],
+  false,
+  null,
+  null,
+  null
+  
+)
+
+/* hot reload */
+if (false) { var api; }
+component.options.__file = "resources/js/components/instituicoes/RelCursos.vue"
+/* harmony default export */ __webpack_exports__["default"] = (component.exports);
+
+/***/ }),
+
+/***/ "./resources/js/components/instituicoes/RelCursos.vue?vue&type=script&lang=js&":
+/*!*************************************************************************************!*\
+  !*** ./resources/js/components/instituicoes/RelCursos.vue?vue&type=script&lang=js& ***!
+  \*************************************************************************************/
+/*! exports provided: default */
+/***/ (function(module, __webpack_exports__, __webpack_require__) {
+
+"use strict";
+__webpack_require__.r(__webpack_exports__);
+/* harmony import */ var _node_modules_babel_loader_lib_index_js_ref_4_0_node_modules_vue_loader_lib_index_js_vue_loader_options_RelCursos_vue_vue_type_script_lang_js___WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! -!../../../../node_modules/babel-loader/lib??ref--4-0!../../../../node_modules/vue-loader/lib??vue-loader-options!./RelCursos.vue?vue&type=script&lang=js& */ "./node_modules/babel-loader/lib/index.js?!./node_modules/vue-loader/lib/index.js?!./resources/js/components/instituicoes/RelCursos.vue?vue&type=script&lang=js&");
+/* empty/unused harmony star reexport */ /* harmony default export */ __webpack_exports__["default"] = (_node_modules_babel_loader_lib_index_js_ref_4_0_node_modules_vue_loader_lib_index_js_vue_loader_options_RelCursos_vue_vue_type_script_lang_js___WEBPACK_IMPORTED_MODULE_0__["default"]); 
+
+/***/ }),
+
+/***/ "./resources/js/components/instituicoes/RelCursos.vue?vue&type=template&id=7d7a5b0b&":
+/*!*******************************************************************************************!*\
+  !*** ./resources/js/components/instituicoes/RelCursos.vue?vue&type=template&id=7d7a5b0b& ***!
+  \*******************************************************************************************/
+/*! exports provided: render, staticRenderFns */
+/***/ (function(module, __webpack_exports__, __webpack_require__) {
+
+"use strict";
+__webpack_require__.r(__webpack_exports__);
+/* harmony import */ var _node_modules_vue_loader_lib_loaders_templateLoader_js_vue_loader_options_node_modules_vue_loader_lib_index_js_vue_loader_options_RelCursos_vue_vue_type_template_id_7d7a5b0b___WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! -!../../../../node_modules/vue-loader/lib/loaders/templateLoader.js??vue-loader-options!../../../../node_modules/vue-loader/lib??vue-loader-options!./RelCursos.vue?vue&type=template&id=7d7a5b0b& */ "./node_modules/vue-loader/lib/loaders/templateLoader.js?!./node_modules/vue-loader/lib/index.js?!./resources/js/components/instituicoes/RelCursos.vue?vue&type=template&id=7d7a5b0b&");
+/* harmony reexport (safe) */ __webpack_require__.d(__webpack_exports__, "render", function() { return _node_modules_vue_loader_lib_loaders_templateLoader_js_vue_loader_options_node_modules_vue_loader_lib_index_js_vue_loader_options_RelCursos_vue_vue_type_template_id_7d7a5b0b___WEBPACK_IMPORTED_MODULE_0__["render"]; });
+
+/* harmony reexport (safe) */ __webpack_require__.d(__webpack_exports__, "staticRenderFns", function() { return _node_modules_vue_loader_lib_loaders_templateLoader_js_vue_loader_options_node_modules_vue_loader_lib_index_js_vue_loader_options_RelCursos_vue_vue_type_template_id_7d7a5b0b___WEBPACK_IMPORTED_MODULE_0__["staticRenderFns"]; });
 
 
 
