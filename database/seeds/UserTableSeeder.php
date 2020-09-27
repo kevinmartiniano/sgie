@@ -21,14 +21,14 @@ class UserTableSeeder extends Seeder
         \App\User::insert([
             'name' => 'Pedro Silva',
             'email' => 'pedro.silva@example.com',
-            'password' => md5('12345678'),
+            'password' => bcrypt('12345678'),
             'user_type_id' => 1,
         ]);
 
         \App\User::insert([
             'name' => 'Fulano da Silva',
             'email' => 'fulano.silva@example.com',
-            'password' => md5('12345678'),
+            'password' => bcrypt('12345678'),
             'user_type_id' => 2,
         ]);
     }
