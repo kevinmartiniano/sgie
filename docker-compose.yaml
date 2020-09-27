@@ -1,0 +1,31 @@
+version: '3.3'
+
+networks:
+  sgie-network:
+    external: true
+
+services:
+  web:
+    build:
+      context: .
+      dockerfile: Dockerfile
+    volumes:
+        - .:/var/www/html
+    ports:
+      - 8000:80
+    networks:
+      - sgie-network
+
+  database:
+    image: mysql:5.7
+    environment:
+      MYSQL_DATABASE: ${DB_DATABASE}
+      MYSQL_ROOT_PASSWORD: ${DB_PASSWORD}
+      MYSQL_PASSWORD: ${DB_PASSWORD}
+      MYSQL_USER: ${DB_USERNAME}
+    ports:
+      - "3306:3306"
+    volumes:
+      - ./storage/mysql:/var/lib/mysql
+    networks:
+      - sgie-network
